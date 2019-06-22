@@ -1,0 +1,12 @@
+Exceptions:
+  Guild-Not-Found: "&cCould not find a guild by the name of or with the member '%NAME%'"
+
+Hyphen: "&b-----------------------------------------------------"
+
+Commands:
+  Join:
+    Usage: "&cInvalid usage! '/guild join <name>'"
+    Joined: "&aYou joined &6%NAME%&a!"
+  Leave:
+    Left: "&eYou left the guild."
+    Not-Joined: "&cYou must be in a guild to use this command!"

@@ -1,9 +1,9 @@
-package net.simplyrin.bungeeguilds.messages;
+package net.simplyrin.bungeeguilds.commands;
 
 /**
- * Created by SimplyRin on 2019/06/20.
+ * Created by SimplyRin on 2019/06/22.
  *
- * Copyright (c) 2018 SimplyRin
+ * Copyright (c) 2019 SimplyRin
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,12 +23,5 @@ package net.simplyrin.bungeeguilds.messages;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class Messages {
-
-	public static final String INGAME_ONLY = "&cThis command is available only in the game.";
-	public static final String NO_PERMISSION = "No_Permission";
-
-	public static final String HYPHEN = "Hyphen";
-	public static final String CONSOLE_HYPHEN = "&9&m---------------------------------------------";
-
+public class ConsoleCommand {
 }

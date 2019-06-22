@@ -103,7 +103,7 @@ public class LanguageManager {
 
 			Object lang = plugin.getString("Player." + this.uuid.toString() + ".Language");
 			if (lang == null || lang.equals("")) {
-				plugin.set("Player." + this.uuid.toString() + ".Language", "english");
+				plugin.set("Player." + this.uuid.toString() + ".Language", plugin.getString("Plugin.Default-Language"));
 			}
 
 			if (LanguageManager.this.configMap.get("english") == null) {

@@ -2,6 +2,7 @@ package net.simplyrin.bungeeguilds.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 import com.google.common.base.Charsets;
 
@@ -47,14 +48,17 @@ public class ConfigManager {
 		this.plugin = plugin;
 
 		this.createConfig();
-		this.saveAndReload();
+		this.save();
 	}
 
-	public void saveAndReload() {
+	public void save() {
 		File config = new File(this.plugin.getDataFolder(), "config.yml");
-
 		Config.saveConfig(this.config, config);
-		this.config = Config.getConfig(config, Charsets.UTF_8);
+	}
+
+	public void load() {
+		File config = new File(this.plugin.getDataFolder(), "config.yml");
+		this.config = Config.getConfig(config);
 	}
 
 	public void createConfig() {
@@ -77,6 +81,12 @@ public class ConfigManager {
 
 			this.config.set("Plugin.Default-Language", "english");
 
+			this.config.set("Guild.SAGIRI.Owner", "b0bb65a2-832f-4a5d-854e-873b7c4522ed");
+			this.config.set("Guild.SAGIRI.Tag", "SAGIRI");
+			this.config.set("Guild.SAGIRI.Tag-Color", "&7");
+			this.config.set("Guild.SAGIRI.Officers", Arrays.asList("64636120-8633-4541-aa5f-412b42ddb04d"));
+			this.config.set("Guild.SAGIRI.Members", Arrays.asList()); // Arrays.asList("b0bb65a2-832f-4a5d-854e-873b7c4522ed", "64636120-8633-4541-aa5f-412b42ddb04d"));
+
 			this.config.set("Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Name", "SimplyRin");
 			this.config.set("Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Language", "english");
 			this.config.set("Player.b0bb65a2-832f-4a5d-854e-873b7c4522ed.Joined-Guild", "SAGIRI");
@@ -84,17 +94,14 @@ public class ConfigManager {
 
 			this.config.set("Player.64636120-8633-4541-aa5f-412b42ddb04d.Name", "SimplyFoxy");
 			this.config.set("Player.64636120-8633-4541-aa5f-412b42ddb04d.Language", "english");
-			this.config.set("Player.64636120-8633-4541-aa5f-412b42ddb04d.Joined-Guild", "&c[CREATOR] ");
+			this.config.set("Player.64636120-8633-4541-aa5f-412b42ddb04d.Joined-Guild", "SAGIRI");
 			this.config.set("Player.64636120-8633-4541-aa5f-412b42ddb04d.Toggle", true);
 
 			Config.saveConfig(this.config, config);
 		}
 
 		this.config = Config.getConfig(config, Charsets.UTF_8);
-
-		this.config.set("Plugin.Disable-Alias", null);
-
-		this.saveAndReload();
+		this.save();
 	}
 
 	public void resetStringValue(String key, String value) {

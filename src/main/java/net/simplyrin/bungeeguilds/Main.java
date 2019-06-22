@@ -12,6 +12,7 @@ import net.simplyrin.bungeeguilds.commands.GuildCommand;
 import net.simplyrin.bungeeguilds.messages.Messages;
 import net.simplyrin.bungeeguilds.tools.ThreadPool;
 import net.simplyrin.bungeeguilds.utils.ConfigManager;
+import net.simplyrin.bungeeguilds.utils.GuildManager;
 import net.simplyrin.bungeeguilds.utils.LanguageManager;
 import net.simplyrin.bungeeguilds.utils.MessageBuilder;
 import net.simplyrin.bungeeguilds.utils.MySQLManager;
@@ -40,6 +41,7 @@ public class Main extends Plugin {
 	private static Main instance;
 
 	private ConfigManager configManager;
+	private GuildManager guildManager;
 	private LanguageManager languageManager;
 
 	private boolean isEnabledMySQL;
@@ -54,7 +56,7 @@ public class Main extends Plugin {
 		if (this.getProxy().getPluginManager().getPlugin("BungeeFriends") == null) {
 			this.info("&c" + Messages.CONSOLE_HYPHEN);
 			this.info("");
-			this.info("&4&lYou need requires BungeeFriends(version 1.5.14.1+) to use BungeeGuilds!");
+			this.info("&4&lYou need requires BungeeFriends(version 1.5.14.1+) to use this plugin!");
 			this.info("&4&lYou can download BungeeFriends at ");
 			this.info("");
 			this.info("&c" + Messages.CONSOLE_HYPHEN);
@@ -62,6 +64,7 @@ public class Main extends Plugin {
 		}
 
 		this.configManager = new ConfigManager(this);
+		this.guildManager = new GuildManager(this);
 		this.mySQLManager = new MySQLManager(this);
 
 		this.isEnabledMySQL = this.mySQLManager.getConfig().getBoolean("Enable");
