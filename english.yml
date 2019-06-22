@@ -1,3 +1,7 @@
+#################################################################################
+# It is a sample file. If you would like to help translate, please use Crowdin. #
+#                  https://crowdin.com/project/bungeeguilds                     #
+#################################################################################
 Exceptions:
   Guild-Not-Found: "&cCould not find a guild by the name of or with the member '%NAME%'"
 
