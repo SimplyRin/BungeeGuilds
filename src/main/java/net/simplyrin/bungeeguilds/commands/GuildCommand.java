@@ -1,13 +1,18 @@
 package net.simplyrin.bungeeguilds.commands;
 
+import java.util.HashMap;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.simplyrin.bungeeguilds.Main;
-import net.simplyrin.bungeeguilds.exceptions.GuildNotFoundException;
 import net.simplyrin.bungeeguilds.exceptions.GuildNotJoinedException;
 import net.simplyrin.bungeeguilds.messages.Messages;
 import net.simplyrin.bungeeguilds.messages.Permissions;
+import net.simplyrin.bungeeguilds.tools.Request;
+import net.simplyrin.bungeeguilds.tools.ThreadPool;
 import net.simplyrin.bungeeguilds.utils.GuildManager.GuildUtils;
 import net.simplyrin.bungeeguilds.utils.LanguageManager.LanguageUtils;
 
@@ -32,6 +37,7 @@ import net.simplyrin.bungeeguilds.utils.LanguageManager.LanguageUtils;
 public class GuildCommand extends Command {
 
 	private Main plugin;
+	private HashMap<String, Request> requestMap = new HashMap<>();
 
 	public GuildCommand(Main plugin) {
 		super("guild", null, "g");
@@ -57,19 +63,60 @@ public class GuildCommand extends Command {
 		if (args.length > 0) {
 			if (args[0].equalsIgnoreCase("join")) {
 				if (args.length > 1) {
-					try {
-						myGuilds.joinGuild(args[1]);
+					if (!myGuilds.findGuild(args[1])) {
 						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-						this.plugin.info(player, langUtils.getString("Commands.Join.Not-Joined").replace("%NAME%", myGuilds.getGuildName()));
+						this.plugin.info(player, langUtils.getString(langUtils.getString("Exceptions.Guild-Not-Found").replace("%NAME%", args[1].toUpperCase())));
 						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-					} catch (GuildNotFoundException e) {
-						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-						this.plugin.info(player, langUtils.getString(e.getKey().replace("%NAME%", args[1].toUpperCase())));
-						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						return;
 					}
+
+					this.requestMap.put(player.getName().toLowerCase(), new Request(args[1].toUpperCase(), myGuilds));
+					ThreadPool.run(() -> {
+						try {
+							TimeUnit.MINUTES.sleep(5);
+						} catch (Exception e) {
+						}
+
+						if (this.requestMap.get(player.getName().toLowerCase()) == null) {
+							return;
+						}
+
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						this.plugin.info(player, langUtils.getString("Commands.Join.Request.Expired").replace("%NAME%", myGuilds.getGuildName()));
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+
+						// 名前から検索しないと null になるよアホ
+						UUID uniqueId = myGuilds.getGuildOwner();
+						this.plugin.info(uniqueId, langUtils.getString(Messages.HYPHEN));
+						this.plugin.info(uniqueId, langUtils.getString("Commands.Join.Request.Owner-Expired").replace("%DISPLAYNAME%", myGuilds.getDisplayName()));
+						this.plugin.info(uniqueId, langUtils.getString(Messages.HYPHEN));
+
+						this.requestMap.put(player.getName().toLowerCase(), null);
+					});
+
+					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+					this.plugin.info(player, langUtils.getString("Commands.Join.Request.Sent").replace("%NAME%", myGuilds.getGuildName()));
+					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 					return;
 				}
 				this.plugin.info(player, langUtils.getString("Commands.Join.Usage"));
+				return;
+			}
+
+			if (args[0].equalsIgnoreCase("accept")) {
+				if (args.length > 1) {
+					Request targetGuilds = this.requestMap.get(args[1].toLowerCase());
+					if (targetGuilds == null) {
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						this.plugin.info(player, langUtils.getString("Commands.Accept.NotSent"));
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						return;
+					}
+				}
+
+				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				this.plugin.info(player, langUtils.getString("Commands.Accept.Usage"));
+				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 				return;
 			}
 

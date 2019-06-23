@@ -9,8 +9,18 @@ Hyphen: "&b-----------------------------------------------------"
 
 Commands:
   Join:
-    Usage: "&cInvalid usage! '/guild join <name>'"
+    Usage: "&cInvalid usage! '/guild join'"
     Joined: "&aYou joined &6%NAME%&a!"
+    Request:
+      Sent: "&aYou requested to join &a%NAME%&a! They have 5 minutes to accept!"
+      Expired: "&eThe guild join request to &6%NAME% &ehas expired"
+      Owner-Expired: "&eThe guild join request from %DISPLAYNAME% &ehas expired"
+      Received: "%DISPLAYNAME% &ahas requested to join the Guild!\nClick here</guild accept %NAME%> to accept or type &aguild accept %DISPLAYNAME%!"
   Leave:
     Left: "&eYou left the guild."
     Not-Joined: "&cYou must be in a guild to use this command!"
+  Accept:
+    Usage: "&cInvalid usage! '/guild accept'"
+    NotSent: "&cThe request from this player has not been sent"
+  Create:
+    NoPermission: "&cYou must be &aVIP&6+ &cto create a guild!\nHowever, you can still join other peoples' guilds!"

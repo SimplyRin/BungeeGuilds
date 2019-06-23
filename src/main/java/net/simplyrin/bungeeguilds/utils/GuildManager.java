@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.simplyrin.bungeeguilds.Main;
-import net.simplyrin.bungeeguilds.exceptions.GuildNotFoundException;
 import net.simplyrin.bungeeguilds.exceptions.GuildNotJoinedException;
 
 /**
@@ -82,12 +81,24 @@ public class GuildManager {
 			return plugin.getString("Player." + this.uuid.toString() + ".Joined-Guild");
 		}
 
-		public void joinGuild(String guildName) throws GuildNotFoundException {
-			guildName = guildName.toUpperCase();
-			if (plugin.getString("Guild." + guildName + ".Name") == null || plugin.getString("Guild." + guildName + ".Name").equals("")) {
-				throw new GuildNotFoundException("Exceptions.Guild-Not-Found", "%NAME% をギルド名に置き換える必要あり -> " + guildName);
+		public UUID getGuildOwner() {
+			try {
+				return UUID.fromString(plugin.getString("Guild." + this.getGuildName() + ".Owner"));
+			} catch (Exception e) {
+				return null;
 			}
+		}
+
+		public boolean findGuild(String guildName) {
+			guildName = guildName.toUpperCase();
+			return !plugin.getString("Guild." + guildName + ".Name").equals("");
+		}
+
+		public void joinGuild(String guildName) /* throws GuildNotFoundException */ {
+			guildName = guildName.toUpperCase();
 			plugin.set("Player." + this.uuid.toString() + ".Joined-Guild", guildName);
+			String key = "Guild." + guildName + ".Members";
+			plugin.set(key, plugin.getStringList(key).add(this.uuid.toString()));
 		}
 
 		public void quitGuild() throws GuildNotJoinedException {

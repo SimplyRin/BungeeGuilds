@@ -139,7 +139,7 @@ public class Main extends Plugin {
 		if (args.equals("") || args == null) {
 			return;
 		}
-		player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getPrefix() + args));
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getPrefix() + args.replace("\n", "\n" + this.getPrefix())));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -149,7 +149,7 @@ public class Main extends Plugin {
 		}
 		ProxiedPlayer player = this.getProxy().getPlayer(uuid);
 		if (player != null) {
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getPrefix() + args));
+			player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getPrefix() + args.replace("\n", "\n" + this.getPrefix())));
 		}
 	}
 
