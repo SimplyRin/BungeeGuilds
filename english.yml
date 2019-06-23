@@ -23,4 +23,4 @@ Commands:
     Usage: "&cInvalid usage! '/guild accept'"
     NotSent: "&cThe request from this player has not been sent"
   Create:
-    NoPermission: "&cYou must be &aVIP&6+ &cto create a guild!\nHowever, you can still join other peoples' guilds!"
+    NoPermission: "&cYou must be &aVIP&6+ &cto create a guild!\n&cHowever, you can still join other peoples' guilds!"
