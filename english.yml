@@ -12,7 +12,7 @@ Commands:
     Usage: "&cInvalid usage! '/guild join'"
     Joined: "&aYou joined &6%NAME%&a!"
     Request:
-      Sent: "&aYou requested to join &a%NAME%&a! They have 5 minutes to accept!"
+      Sent: "&aYou requested to join &6%NAME%&a! They have 5 minutes to accept!"
       Expired: "&eThe guild join request to &6%NAME% &ehas expired"
       Owner-Expired: "&eThe guild join request from %DISPLAYNAME% &ehas expired"
       Received: "%DISPLAYNAME% &ahas requested to join the Guild!\nClick here</guild accept %NAME%> to accept or type &aguild accept %DISPLAYNAME%!"
