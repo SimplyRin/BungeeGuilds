@@ -53,23 +53,26 @@ public class Main extends Plugin {
 	public void onEnable() {
 		instance = this;
 
+		this.configManager = new ConfigManager(this);
+
 		if (this.getProxy().getPluginManager().getPlugin("BungeeFriends") == null) {
 			this.info("&c" + Messages.CONSOLE_HYPHEN);
 			this.info("");
 			this.info("&4&lYou need requires BungeeFriends(version 1.5.14.1+) to use this plugin!");
-			this.info("&4&lYou can download BungeeFriends at ");
+			this.info("&4&lYou can download BungeeFriends at https://www.spigotmc.org/resources/59256/");
 			this.info("");
 			this.info("&c" + Messages.CONSOLE_HYPHEN);
 			return;
 		}
 
-		this.configManager = new ConfigManager(this);
 		this.guildManager = new GuildManager(this);
 		this.mySQLManager = new MySQLManager(this);
+		this.languageManager = new LanguageManager(this);
 
 		this.isEnabledMySQL = this.mySQLManager.getConfig().getBoolean("Enable");
 
 		this.guildCommand = new GuildCommand(this);
+		this.getProxy().getPluginManager().registerCommand(this, this.guildCommand);
 	}
 
 	@Override
@@ -158,6 +161,16 @@ public class Main extends Plugin {
 			return;
 		}
 		player.sendMessage(MessageBuilder.get(this.getPrefix()), args);
+	}
+
+	public void info(UUID uniqueId, TextComponent args) {
+		if (args.getText().equals("") || args == null) {
+			return;
+		}
+		ProxiedPlayer player = this.getProxy().getPlayer(uniqueId);
+		if (player != null) {
+			player.sendMessage(MessageBuilder.get(this.getPrefix()), args);
+		}
 	}
 
 }

@@ -1,12 +1,9 @@
-package net.simplyrin.bungeeguilds.tools;
+package net.simplyrin.bungeeguilds.exceptions;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.simplyrin.bungeeguilds.utils.GuildManager.Guild;
-import net.simplyrin.bungeeguilds.utils.GuildManager.PlayerUtils;
 
 /**
- * Created by SimplyRin on 2019/06/23.
+ * Created by SimplyRin on 2019/06/24.
  *
  * Copyright (c) 2019 SimplyRin
  *
@@ -29,11 +26,15 @@ import net.simplyrin.bungeeguilds.utils.GuildManager.PlayerUtils;
  * SOFTWARE.
  */
 @Getter
-@AllArgsConstructor
-public class Request {
+public class GuildAlreadyJoinedException extends BaseException {
 
-	private String name;
-	private PlayerUtils guildUtils;
-	private Guild guild;
+	private String key;
+	private String message;
+
+	public GuildAlreadyJoinedException(String key, String message) {
+		super(message);
+		this.key = key;
+		this.message = message;
+	}
 
 }

@@ -54,7 +54,7 @@ public class LanguageManager {
 		this.plugin.info("Checking if a new language is available...");
 		Configuration config;
 		try {
-			config = Config.getConfig(new URL("https://api.simplyrin.net/Bungee-Guilds/BungeeFriends/Languages/available.txt"));
+			config = Config.getConfig(new URL("https://api.simplyrin.net/Bungee-Plugins/BungeeGuilds/Languages/available.txt"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			this.plugin.info("Failed connecting to the server.");
@@ -68,7 +68,7 @@ public class LanguageManager {
 					this.plugin.info("&7" + lang + " is available! Downloading...");
 					Configuration langConfig;
 					try {
-						langConfig = Config.getConfig(new URL("https://api.simplyrin.net/Bungee-Guilds/BungeeFriends/Languages/Files/" + lang + ".yml"));
+						langConfig = Config.getConfig(new URL("https://api.simplyrin.net/Bungee-Plugins/BungeeGuilds/Languages/Files/" + lang + ".yml"));
 					} catch (Exception e) {
 						return;
 					}

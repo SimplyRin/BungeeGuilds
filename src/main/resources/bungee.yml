@@ -1,0 +1,4 @@
+main: net.simplyrin.bungeeguilds.Main
+name: BungeeGuilds
+version: 1.0
+depend: [BungeeFriends]

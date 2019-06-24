@@ -1,20 +1,21 @@
 package net.simplyrin.bungeeguilds.commands;
 
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.simplyrin.bungeeguilds.Main;
-import net.simplyrin.bungeeguilds.exceptions.GuildNotJoinedException;
 import net.simplyrin.bungeeguilds.messages.Messages;
 import net.simplyrin.bungeeguilds.messages.Permissions;
 import net.simplyrin.bungeeguilds.tools.Request;
 import net.simplyrin.bungeeguilds.tools.ThreadPool;
-import net.simplyrin.bungeeguilds.utils.GuildManager.GuildUtils;
+import net.simplyrin.bungeeguilds.utils.GuildManager.Guild;
+import net.simplyrin.bungeeguilds.utils.GuildManager.PlayerUtils;
 import net.simplyrin.bungeeguilds.utils.LanguageManager.LanguageUtils;
+import net.simplyrin.bungeeguilds.utils.MessageBuilder;
 
 /**
  * Created by SimplyRin on 2019/06/20.
@@ -52,7 +53,8 @@ public class GuildCommand extends Command {
 		}
 
 		ProxiedPlayer player = (ProxiedPlayer) sender;
-		GuildUtils myGuilds = this.plugin.getGuildManager().getPlayer(player);
+		PlayerUtils myGuilds = this.plugin.getGuildManager().getPlayer(player);
+		Guild guild = this.plugin.getGuildManager().getGuildByJoinedMember(player);
 		LanguageUtils langUtils = this.plugin.getLanguageManager().getPlayer(player);
 
 		if (!player.hasPermission(Permissions.MAIN)) {
@@ -63,74 +65,46 @@ public class GuildCommand extends Command {
 		if (args.length > 0) {
 			if (args[0].equalsIgnoreCase("join")) {
 				if (args.length > 1) {
-					if (!myGuilds.findGuild(args[1])) {
+					Guild targetGuild = this.plugin.getGuildManager().getGuildByName(args[1]);
+					if (targetGuild == null) {
 						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-						this.plugin.info(player, langUtils.getString(langUtils.getString("Exceptions.Guild-Not-Found").replace("%NAME%", args[1].toUpperCase())));
+						this.plugin.info(player, langUtils.getString("Commands.Join.GuildNotFound").replace("%NAME%", args[1].toUpperCase()));
 						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 						return;
 					}
 
-					this.requestMap.put(player.getName().toLowerCase(), new Request(args[1].toUpperCase(), myGuilds));
+					this.requestMap.put(player.getName().toLowerCase(), new Request(args[1].toUpperCase(), myGuilds, targetGuild));
 					ThreadPool.run(() -> {
 						try {
 							TimeUnit.MINUTES.sleep(5);
 						} catch (Exception e) {
 						}
 
-						if (this.requestMap.get(player.getName().toLowerCase()) == null) {
-							return;
-						}
-
-						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-						this.plugin.info(player, langUtils.getString("Commands.Join.Request.Expired").replace("%NAME%", myGuilds.getGuildName()));
-						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-
-						// 名前から検索しないと null になるよアホ
-						UUID uniqueId = myGuilds.getGuildOwner();
-						this.plugin.info(uniqueId, langUtils.getString(Messages.HYPHEN));
-						this.plugin.info(uniqueId, langUtils.getString("Commands.Join.Request.Owner-Expired").replace("%DISPLAYNAME%", myGuilds.getDisplayName()));
-						this.plugin.info(uniqueId, langUtils.getString(Messages.HYPHEN));
-
-						this.requestMap.put(player.getName().toLowerCase(), null);
+						// 失効したらこ↑こ↓くるからコード書けよ
 					});
 
 					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-					this.plugin.info(player, langUtils.getString("Commands.Join.Request.Sent").replace("%NAME%", myGuilds.getGuildName()));
+					this.plugin.info(player, langUtils.getString("Commands.Join.Request.Sent").replace("%NAME%", targetGuild.getName()));
 					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+
+					this.plugin.info(targetGuild.getOwner(), langUtils.getString(Messages.HYPHEN));
+
+					String sMessage = langUtils.getString("Commands.Join.Request.Received");
+					sMessage = sMessage.replace("%DISPLAYNAME%", myGuilds.getDisplayName());
+
+					String sCommand = sMessage.split("<")[1].split("|")[1].split(">")[0];
+
+					String hover = langUtils.getString("Commands.Join.Request.ClickToRun").replace("%NAME%", player.getName());
+
+					TextComponent t1 = MessageBuilder.get(sMessage.split("<")[0], "", null, "", false);
+					t1.addExtra(MessageBuilder.get(langUtils.getString("Commands.Join.Request.ClickHere"), sCommand.replace("%NAME%", player.getName()), null, hover, false));
+					t1.addExtra(MessageBuilder.get(sMessage.split(">")[1], "", null, "", false));
+
+					this.plugin.info(targetGuild.getOwner(), t1);
+					this.plugin.info(targetGuild.getOwner(), langUtils.getString(Messages.HYPHEN));
 					return;
 				}
 				this.plugin.info(player, langUtils.getString("Commands.Join.Usage"));
-				return;
-			}
-
-			if (args[0].equalsIgnoreCase("accept")) {
-				if (args.length > 1) {
-					Request targetGuilds = this.requestMap.get(args[1].toLowerCase());
-					if (targetGuilds == null) {
-						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-						this.plugin.info(player, langUtils.getString("Commands.Accept.NotSent"));
-						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-						return;
-					}
-				}
-
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-				this.plugin.info(player, langUtils.getString("Commands.Accept.Usage"));
-				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-				return;
-			}
-
-			if (args[0].equalsIgnoreCase("leave")) {
-				try {
-					myGuilds.quitGuild();
-					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-					this.plugin.info(player, langUtils.getString("Commands.Leave.Left"));
-					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-				} catch (GuildNotJoinedException e) {
-					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-					this.plugin.info(player, langUtils.getString("Commands.Leave.Not-Joined"));
-					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
-				}
 				return;
 			}
 		}

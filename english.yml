@@ -2,23 +2,30 @@
 # It is a sample file. If you would like to help translate, please use Crowdin. #
 #                  https://crowdin.com/project/bungeeguilds                     #
 #################################################################################
-Exceptions:
-  Guild-Not-Found: "&cCould not find a guild by the name of or with the member '%NAME%'"
-
 Hyphen: "&b-----------------------------------------------------"
 
 Commands:
   Join:
     Usage: "&cInvalid usage! '/guild join'"
     Joined: "&aYou joined &6%NAME%&a!"
+    AlreadyJoined: "&cYou're already in a guild!"
+    GuildNotFound: "&cCould not find a guild by the name of or with the member '%NAME%'"
     Request:
       Sent: "&aYou requested to join &6%NAME%&a! They have 5 minutes to accept!"
       Expired: "&eThe guild join request to &6%NAME% &ehas expired"
       Owner-Expired: "&eThe guild join request from %DISPLAYNAME% &ehas expired"
-      Received: "%DISPLAYNAME% &ahas requested to join the Guild!\n&aClick here</guild accept %NAME%> to accept or type &a/guild accept %DISPLAYNAME%!"
+      ClickHere: "&6&lClick here"
+      Received: "%DISPLAYNAME% &ahas requested to join the Guild!\n&a</guild accept %NAME%> &ato accept or type &a/guild accept %DISPLAYNAME%&a!"
+      ClickToRun: "&bClick to run\n&b/guild accept %NAME%"
   Leave:
     Left: "&eYou left the guild."
     Not-Joined: "&cYou must be in a guild to use this command!"
+  Chat:
+    Usage: "&cInvalid usage! '/guild chat message'"
+    Chat: "&2Guild > %DISPLAYNAME%&f: %MESSAGE%"
+  Kick:
+    Usage: "&cInvalid usage! '/guild kick player reason'"
+    NotJoined: "%DISPLAYNAME% &cis not in your guild!"
   Accept:
     Usage: "&cInvalid usage! '/guild accept'"
     NotSent: "&cThe request from this player has not been sent"

@@ -1,11 +1,15 @@
 package net.simplyrin.bungeeguilds.utils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.simplyrin.bungeeguilds.Main;
-import net.simplyrin.bungeeguilds.exceptions.GuildNotJoinedException;
+import net.simplyrin.bungeeguilds.exceptions.GuildAlreadyJoinedException;
+import net.simplyrin.bungeeguilds.exceptions.GuildPersonNotFoundException;
+import net.simplyrin.bungeeguilds.utils.LanguageManager.LanguageUtils;
 
 /**
  * Created by SimplyRin on 2019/06/22.
@@ -34,30 +38,148 @@ public class GuildManager {
 
 	private Main plugin;
 
-	private HashMap<UUID, GuildUtils> maps = new HashMap<>();
+	private HashMap<UUID, PlayerUtils> maps = new HashMap<>();
 
 	public GuildManager(Main plugin) {
 		this.plugin = plugin;
 	}
 
-	public GuildUtils getPlayer(ProxiedPlayer player) {
-		return new GuildUtils(player.getUniqueId());
+	public PlayerUtils getPlayer(ProxiedPlayer player) {
+		return new PlayerUtils(player.getUniqueId());
 	}
 
-	public GuildUtils getPlayer(String uuid) {
-		return new GuildUtils(UUID.fromString(uuid));
+	public PlayerUtils getPlayer(String uuid) {
+		return new PlayerUtils(UUID.fromString(uuid));
 	}
 
-	public GuildUtils getPlayer(UUID uniqueId) {
+	public PlayerUtils getPlayer(UUID uniqueId) {
 		return this.maps.get(uniqueId);
 	}
 
-	public class GuildUtils {
+	public Guild getGuildByName(String name) {
+		String guildOwner = plugin.getString("Guild." + name.toUpperCase() + ".Owner");
+
+		// Guild に参加またはなかったら null
+		if (guildOwner == null || guildOwner.equals("")) {
+			return null;
+		}
+
+		return new Guild(name.toUpperCase());
+	}
+
+	public Guild getGuildByJoinedMember(ProxiedPlayer player) /* throws GuildNotJoinedException */ {
+		return this.getGuildByJoinedMember(player.getUniqueId());
+	}
+
+	public Guild getGuildByJoinedMember(UUID uniqueId) /* throws GuildNotJoinedException */ {
+		String guildName = plugin.getString("Player." + uniqueId.toString() + ".Joined-Guild");
+
+		// Guild に参加していなかったらスロー。
+		// これってさ、スローか null 返すかどっちのほうがいいと思います？
+		if (guildName == null || guildName.equals("")) {
+			// throw new GuildNotJoinedException("Command.Kick.NotJoined", "%DISPLAYNAME% を " + uniqueId.toString() + " に変換する必要あり");
+			return null;
+		}
+
+		return new Guild(guildName);
+	}
+
+	public class Guild {
+
+		private String guildName;
+
+		public Guild(String guildName) {
+			this.guildName = guildName.toUpperCase();
+		}
+
+		public String getName() {
+			return this.guildName;
+		}
+
+		public Guild setOwner(ProxiedPlayer player) {
+			return this.setOwner(player.getUniqueId());
+		}
+
+		public Guild setOwner(UUID uniqueId) {
+			this.updateConfig("Owner", uniqueId.toString());
+			return this;
+		}
+
+		public UUID getOwner() {
+			return UUID.fromString(this.getConfig("Owner"));
+		}
+
+		public Guild setTag(String tag) {
+			this.updateConfig("Tag", tag);
+			return null;
+		}
+
+		public Guild setTagColor(ChatColor chatColor) {
+			this.updateConfig("Tag-Color", chatColor.toString());
+			return this;
+		}
+
+		public Guild addMember(ProxiedPlayer player) throws GuildAlreadyJoinedException {
+			return this.addMember(player.getUniqueId());
+		}
+
+		public Guild addMember(UUID uniqueId) throws GuildAlreadyJoinedException {
+			List<String> list = plugin.getStringList("Guild." + this.guildName + ".Members");
+			if (list.contains(uniqueId.toString())) {
+				throw new GuildAlreadyJoinedException("Command.Join.AlreadyJoined", null);
+			}
+			list.add(uniqueId.toString());
+			plugin.set("Guild." + this.guildName + ".Members", list);
+			return this;
+		}
+
+		public Guild kickMember(ProxiedPlayer player, String reason) throws GuildPersonNotFoundException {
+			return kickMember(player.getUniqueId(), reason);
+		}
+
+		public Guild kickMember(UUID uniqueId, String reason) throws GuildPersonNotFoundException {
+			List<String> list = plugin.getStringList("Guild." + this.guildName + ".Members");
+			if (!list.contains(uniqueId.toString())) {
+				throw new GuildPersonNotFoundException("Command.Kick.NotJoined", "%DISPLAYNAME% を " + uniqueId.toString() + " に変換する必要あり");
+			}
+			list.remove(uniqueId.toString());
+			plugin.set("Guild." + this.guildName + ".Members", list);
+			return this;
+		}
+
+		public Guild sendChat(String message) {
+			List<String> list = plugin.getStringList("Guild." + this.guildName + ".Members");
+			for (String uuid : list) {
+				UUID uniqueId = UUID.fromString(uuid);
+
+				PlayerUtils guildUtils = getPlayer(uniqueId);
+				LanguageUtils langUtils = plugin.getLanguageManager().getPlayer(uniqueId);
+				String l = langUtils.getString("Commands.Chat.Chat");
+				l = l.replace("%DISPLAYNAME%", guildUtils.getDisplayName());
+				l = l.replace("%MESSAGE%", message);
+				l = l.replace("\n", "");
+				plugin.info(uniqueId, l);
+			}
+			return this;
+		}
+
+		public Guild updateConfig(String key, String value) {
+			plugin.set("Guild." + this.guildName + "." + key, value);
+			return this;
+		}
+
+		public String getConfig(String key) {
+			return plugin.getString("Guild." + this.guildName + "." + key);
+		}
+
+	}
+
+	public class PlayerUtils {
 
 		private UUID uuid;
 		private String joinedGuild;
 
-		public GuildUtils(UUID uuid) {
+		public PlayerUtils(UUID uuid) {
 			this.uuid = uuid;
 
 			ProxiedPlayer player = plugin.getProxy().getPlayer(this.uuid);
@@ -77,16 +199,8 @@ public class GuildManager {
 			}
 		}
 
-		public String getGuildName() {
-			return plugin.getString("Player." + this.uuid.toString() + ".Joined-Guild");
-		}
-
-		public UUID getGuildOwner() {
-			try {
-				return UUID.fromString(plugin.getString("Guild." + this.getGuildName() + ".Owner"));
-			} catch (Exception e) {
-				return null;
-			}
+		public Guild getGuild() {
+			return getGuildByJoinedMember(this.uuid);
 		}
 
 		public boolean findGuild(String guildName) {
@@ -99,18 +213,6 @@ public class GuildManager {
 			plugin.set("Player." + this.uuid.toString() + ".Joined-Guild", guildName);
 			String key = "Guild." + guildName + ".Members";
 			plugin.set(key, plugin.getStringList(key).add(this.uuid.toString()));
-		}
-
-		public void quitGuild() throws GuildNotJoinedException {
-			String guild = this.getGuildName();
-			if (guild == null || guild.equals("")) {
-				throw new GuildNotJoinedException("Commands.Join.Not-Joined", "Nothing");
-			}
-			plugin.set("Player." + this.uuid.toString() + ".Joined-Guild", "");
-		}
-
-		public void disband() {
-
 		}
 
 		public String getDisplayName() {
