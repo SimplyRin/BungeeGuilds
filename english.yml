@@ -37,6 +37,6 @@ Commands:
     Usage: "&cInvalid usage! '/guild accept'"
     NotSent: "&cThe request from this player has not been sent"
     NotOwner: "&cYou are not a guild owner!"
-    AlradyJoined: "&c%DISPLAYNAME% is already in your guild!"
+    AlradyJoined: "&c%DISPLAYNAME% &cis already in your guild!"
   Create:
     NoPermission: "&cYou must be %RANK% &cto create a guild!\n&cHowever, you can still join other peoples' guilds!"
