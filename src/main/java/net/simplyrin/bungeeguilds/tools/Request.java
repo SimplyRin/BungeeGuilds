@@ -1,5 +1,7 @@
 package net.simplyrin.bungeeguilds.tools;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.simplyrin.bungeeguilds.utils.GuildManager.Guild;
@@ -33,6 +35,7 @@ import net.simplyrin.bungeeguilds.utils.GuildManager.PlayerUtils;
 public class Request {
 
 	private String name;
+	private UUID uniqueId;
 	private PlayerUtils guildUtils;
 	private Guild guild;
 

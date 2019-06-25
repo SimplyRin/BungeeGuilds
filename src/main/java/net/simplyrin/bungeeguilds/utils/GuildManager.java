@@ -1,5 +1,6 @@
 package net.simplyrin.bungeeguilds.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -119,6 +120,14 @@ public class GuildManager {
 			return this;
 		}
 
+		public List<UUID> getMembers() {
+			List<UUID> list = new ArrayList<>();
+			for (String uuid : plugin.getStringList("Guild." + this.guildName + ".Members")) {
+				list.add(UUID.fromString(uuid));
+			}
+			return list;
+		}
+
 		public Guild addMember(ProxiedPlayer player) throws GuildAlreadyJoinedException {
 			return this.addMember(player.getUniqueId());
 		}
@@ -201,6 +210,10 @@ public class GuildManager {
 
 		public Guild getGuild() {
 			return getGuildByJoinedMember(this.uuid);
+		}
+
+		public UUID getUniqueId() {
+			return this.uuid;
 		}
 
 		public boolean findGuild(String guildName) {
