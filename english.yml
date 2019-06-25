@@ -6,28 +6,37 @@ Hyphen: "&b-----------------------------------------------------"
 
 Commands:
   Join:
-    Usage: "&cInvalid usage! '/guild join'"
+    Usage: "&cInvalid usage! '/guild join <guildName>'"
     Joined: "&aYou joined &6%NAME%&a!"
+    OtherJoined: "%DISPLAYNAME% &ejoined the guild!"
     AlreadyJoined: "&cYou're already in a guild!"
     GuildNotFound: "&cCould not find a guild by the name of or with the member '%NAME%'"
     Request:
       Sent: "&aYou requested to join &6%NAME%&a! They have 5 minutes to accept!"
       Expired: "&eThe guild join request to &6%NAME% &ehas expired"
       Owner-Expired: "&eThe guild join request from %DISPLAYNAME% &ehas expired"
-      ClickHere: "&6&lClick here"
-      Received: "%DISPLAYNAME% &ahas requested to join the Guild!\n&a</guild accept %NAME%> &ato accept or type &a/guild accept %DISPLAYNAME%&a!"
+      ClickHere: "&bClick here"
+      Received: "%DISPLAYNAME% &ahas requested to join the Guild!\n&a</guild accept %NAME%> &ato accept or type &b/guild accept %NAME%&a!"
       ClickToRun: "&bClick to run\n&b/guild accept %NAME%"
+  Invite:
+    Usage: "&cInvalid usage! '/guild invite <player>'"
+    NoPermissoin: "&cYour does not have permission to use this!"
+    AlreadyOther: "&c%DISPLAYNAME% &cis already joined other guild!"
+    Invited: "&eYou invited %DISPLAYNAME% &eto your guild. They have 5 minutes to accept."
+    Invite-Received: "%DISPLAYNAME% &ahas invited you to join their guild, &6%NAME%&a!\n</guild accept-invite %NAME%> &ato accept or type &b/guild accept-invite %NAME%&a!"
   Leave:
     Left: "&eYou left the guild."
     Not-Joined: "&cYou must be in a guild to use this command!"
   Chat:
-    Usage: "&cInvalid usage! '/guild chat message'"
+    Usage: "&cInvalid usage! '/guild chat <message>'"
     Chat: "&2Guild > %DISPLAYNAME%&f: %MESSAGE%"
   Kick:
-    Usage: "&cInvalid usage! '/guild kick player reason'"
+    Usage: "&cInvalid usage! '/guild kick <player> <reason>'"
     NotJoined: "%DISPLAYNAME% &cis not in your guild!"
   Accept:
     Usage: "&cInvalid usage! '/guild accept'"
     NotSent: "&cThe request from this player has not been sent"
+    NotOwner: "&cYou are not a guild owner!"
+    AlradyJoined: "&c%DISPLAYNAME% is already in your guild!"
   Create:
     NoPermission: "&cYou must be %RANK% &cto create a guild!\n&cHowever, you can still join other peoples' guilds!"
