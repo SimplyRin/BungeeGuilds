@@ -42,7 +42,7 @@ public class GuildCommand extends Command {
 
 	private Main plugin;
 	private HashMap<String, Request> requestMap = new HashMap<>();
-	private HashMap<String, Request> inviteMap = new HashMap<>();
+	private HashMap<String, Guild> inviteMap = new HashMap<>();
 
 	public GuildCommand(Main plugin) {
 		super("guild", null, "g");
@@ -155,9 +155,7 @@ public class GuildCommand extends Command {
 						return;
 					}
 
-					// Invite 情報を HashMap かどこかにキープさせるコード
-					// inviteMap.put(key, value)
-					// 明日早いので寝ます。おやすみ。(最近寝る時間早いからしゃーない)
+					this.inviteMap.put(player.getName().toLowerCase(), guild);
 
 					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 					this.plugin.info(player, langUtils.getString("Commands.Invite.Invited"));
@@ -177,8 +175,42 @@ public class GuildCommand extends Command {
 
 			if (args[0].equalsIgnoreCase("accept")) {
 				if (args.length > 1) {
+					// Guild 既に参加してるマン
+					if (guild != null) {
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						this.plugin.info(player, langUtils.getString("Commands.Accept.NotSent"));
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						return;
+					}
+
 					Request request = this.requestMap.get(args[1].toLowerCase());
 					if (request == null) {
+						Guild targetGuild = this.inviteMap.get(args[1].toLowerCase());
+						if (targetGuild != null) {
+							try {
+								List<UUID> mList = targetGuild.getMembers();
+
+								targetGuild.addMember(player);
+
+								this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+								this.plugin.info(player, langUtils.getString("Commands.Join.Joined").replace("%NAME%", targetGuild.getName()));
+								this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+
+								for (UUID uniqueId : mList) {
+									LanguageUtils targetLangUtils = this.plugin.getLanguageManager().getPlayer(uniqueId);
+									this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+									this.plugin.info(uniqueId, targetLangUtils.getString("Commands.Join.OtherJoined").replace("%DISPLAYNAME%", myGuilds.getDisplayName()));
+									this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+								}
+								return;
+							} catch (GuildAlreadyJoinedException e) {
+								this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+								this.plugin.info(player, langUtils.getString("Commands.Join.AlreadyJoined"));
+								this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+								return;
+							}
+						}
+
 						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
 						this.plugin.info(player, langUtils.getString("Commands.Accept.NotSent"));
 						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));

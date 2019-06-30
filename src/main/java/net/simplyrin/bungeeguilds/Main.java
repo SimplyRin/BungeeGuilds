@@ -40,6 +40,8 @@ public class Main extends Plugin {
 
 	private static Main instance;
 
+	// private net.simplyrin.bungeefriends.Main friendsInstance;
+
 	private ConfigManager configManager;
 	private GuildManager guildManager;
 	private LanguageManager languageManager;
@@ -52,6 +54,8 @@ public class Main extends Plugin {
 	@Override
 	public void onEnable() {
 		instance = this;
+
+		// this.friendsInstance = net.simplyrin.bungeefriends.Main.getInstance();
 
 		this.configManager = new ConfigManager(this);
 
