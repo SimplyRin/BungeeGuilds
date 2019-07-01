@@ -8,7 +8,9 @@ import java.util.UUID;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.simplyrin.bungeeguilds.Main;
+import net.simplyrin.bungeeguilds.exceptions.GuildAlreadyCreatedException;
 import net.simplyrin.bungeeguilds.exceptions.GuildAlreadyJoinedException;
+import net.simplyrin.bungeeguilds.exceptions.GuildNameAlreadyUsedException;
 import net.simplyrin.bungeeguilds.exceptions.GuildPersonNotFoundException;
 import net.simplyrin.bungeeguilds.utils.LanguageManager.LanguageUtils;
 
@@ -83,6 +85,39 @@ public class GuildManager {
 		}
 
 		return new Guild(guildName);
+	}
+
+	public Guild createGuild(ProxiedPlayer player, String guildName) throws GuildAlreadyJoinedException, GuildNameAlreadyUsedException, GuildAlreadyCreatedException {
+		return this.createGuild(player.getUniqueId(), guildName);
+	}
+
+	public Guild createGuild(UUID uniqueId, String guildName) throws GuildAlreadyJoinedException, GuildNameAlreadyUsedException, GuildAlreadyCreatedException {
+		String joinedGuild = plugin.getString("Player." + uniqueId.toString() + ".Joined-Guild");
+		if (joinedGuild == null) {
+			throw new GuildAlreadyJoinedException("Commands.Join.AlreadyCreated", null);
+		}
+
+		String guildOwner = plugin.getString("Guild." + guildName.toUpperCase() + ".Owner");
+		if (guildOwner != null) {
+			if (guildOwner.length() == 36) {
+				throw new GuildNameAlreadyUsedException("Commands.Create.NameUsed", null);
+			}
+
+			throw new GuildAlreadyCreatedException("Commands.Join.AlreadyJoined", null);
+		}
+
+		Guild guild = new Guild(guildName);
+
+		guild.updateConfig("Owner", uniqueId.toString());
+		guild.updateConfig("Tag", guildName.toUpperCase());
+		guild.updateConfig("Tag-Color", "&7");
+
+		guild.updateConfigEmpty("Officers");
+		guild.updateConfigEmpty("Members");
+
+		plugin.set("Player." + uniqueId.toString() + ".Joined-Guild", guild.getName());
+
+		return guild;
 	}
 
 	public class Guild {
@@ -172,8 +207,23 @@ public class GuildManager {
 			return this;
 		}
 
+		public Guild disband() {
+			this.updateConfig("Owner", null);
+			this.updateConfig("Tag", null);
+			this.updateConfig("Tag-Color", null);
+
+			this.updateConfig("Officers", null);
+			this.updateConfig("Members", null);
+			return this;
+		}
+
 		public Guild updateConfig(String key, String value) {
 			plugin.set("Guild." + this.guildName + "." + key, value);
+			return this;
+		}
+
+		public Guild updateConfigEmpty(String key) {
+			plugin.set("Guild." + this.guildName + "." + key, new ArrayList<>());
 			return this;
 		}
 

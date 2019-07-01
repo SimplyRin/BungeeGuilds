@@ -10,7 +10,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.simplyrin.bungeeguilds.Main;
+import net.simplyrin.bungeeguilds.exceptions.GuildAlreadyCreatedException;
 import net.simplyrin.bungeeguilds.exceptions.GuildAlreadyJoinedException;
+import net.simplyrin.bungeeguilds.exceptions.GuildNameAlreadyUsedException;
 import net.simplyrin.bungeeguilds.messages.Messages;
 import net.simplyrin.bungeeguilds.messages.Permissions;
 import net.simplyrin.bungeeguilds.tools.Request;
@@ -67,6 +69,46 @@ public class GuildCommand extends Command {
 		}
 
 		if (args.length > 0) {
+			if (args[0].equalsIgnoreCase("create")) {
+				if (guild != null) {
+					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+					this.plugin.info(player, langUtils.getString("Commands.Join.AlreadyJoined"));
+					this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+					return;
+				}
+
+				if (args.length > 1) {
+					try {
+						this.plugin.getGuildManager().createGuild(player.getUniqueId(), args[1].toUpperCase());
+
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						this.plugin.info(player, langUtils.getString("Commands.Create.Created").replace("%GUILD_NAME%", args[1].toUpperCase()));
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						return;
+					} catch (GuildAlreadyJoinedException e) {
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						this.plugin.info(player, langUtils.getString(e.getKey()));
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						return;
+					} catch (GuildNameAlreadyUsedException e) {
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						this.plugin.info(player, langUtils.getString(e.getKey()).replace("%GUILD_NAME%", args[1].toUpperCase()));
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						return;
+					} catch (GuildAlreadyCreatedException e) {
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						this.plugin.info(player, langUtils.getString(e.getKey()));
+						this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+						return;
+					}
+				}
+
+				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				this.plugin.info(player, langUtils.getString("Commands.Create.Usage"));
+				this.plugin.info(player, langUtils.getString(Messages.HYPHEN));
+				return;
+			}
+
 			if (args[0].equalsIgnoreCase("join")) {
 				if (args.length > 1) {
 					Guild targetGuild = this.plugin.getGuildManager().getGuildByName(args[1]);

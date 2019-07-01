@@ -5,6 +5,15 @@
 Hyphen: "&b-----------------------------------------------------"
 
 Commands:
+  Create:
+    Usage: "&cInvalid usage! '/guild create <guildName>'"
+    AlreadyCreated: "&cYou're already created a guild!"
+    NameUsed: "&cThere is already a guild by the name of &6%GUILD_NAME%&c!"
+    NoPermission: "&cYou must be %RANK% &cto create a guild!\n&cHowever, you can still join other peoples' guilds!"
+    Created: "&ayou created the &6%GUILD_NAME% &aguild!"
+  Disband:
+    Confirm: "&c================== WARNING ==================\n&eThis will DESTROY THE GUILD and remove all of it's members\n&cAll of the Guild Coins will be DESTROYED. This cannot be undone.\n&cIf you wish to continue, &r&b/guild guild confirm&r&c within 10 seconds.\n&b-----------------------------------------------------"
+    Disbanded: "%DISPLAYNAME% &edisbanded the guild."
   Join:
     Usage: "&cInvalid usage! '/guild join <guildName>'"
     Joined: "&aYou joined &6%NAME%&a!"
@@ -27,6 +36,7 @@ Commands:
   Leave:
     Left: "&eYou left the guild."
     Not-Joined: "&cYou must be in a guild to use this command!"
+    OtherLeft: "%DISPLAYNAME% &eleft the guild!"
   Chat:
     Usage: "&cInvalid usage! '/guild chat <message>'"
     Chat: "&2Guild > %DISPLAYNAME%&f: %MESSAGE%"
@@ -38,5 +48,4 @@ Commands:
     NotSent: "&cThe request from this player has not been sent"
     NotOwner: "&cYou are not a guild owner!"
     AlradyJoined: "&c%DISPLAYNAME% &cis already in your guild!"
-  Create:
-    NoPermission: "&cYou must be %RANK% &cto create a guild!\n&cHowever, you can still join other peoples' guilds!"
+

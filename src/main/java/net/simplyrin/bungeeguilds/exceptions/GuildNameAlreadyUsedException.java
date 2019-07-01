@@ -1,26 +1,22 @@
-package net.simplyrin.bungeeguilds.listeners;
+package net.simplyrin.bungeeguilds.exceptions;
 
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
-import net.simplyrin.bungeeguilds.Main;
+import lombok.Getter;
 
 /**
- * Created by SimplyRin on 2019/06/30.
+ * Created by SimplyRin on 2019/07/01.
  *
  * Copyright (c) 2019 SimplyRin
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -29,15 +25,16 @@ import net.simplyrin.bungeeguilds.Main;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-public class EventListener implements Listener {
-	
-	private Main instance;
-	
-	@EventHandler
-	public void onPostLogin(PostLoginEvent event) {
-		ProxiedPlayer player = event.getPlayer();
-		
-		
+@Getter
+public class GuildNameAlreadyUsedException extends BaseException {
+
+	private String key;
+	private String message;
+
+	public GuildNameAlreadyUsedException(String key, String message) {
+		super(message);
+		this.key = key;
+		this.message = message;
 	}
 
 }
