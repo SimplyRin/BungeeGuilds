@@ -10,7 +10,7 @@ Commands:
     AlreadyCreated: "&cYou're already created a guild!"
     NameUsed: "&cThere is already a guild by the name of &6%GUILD_NAME%&c!"
     NoPermission: "&cYou must be %RANK% &cto create a guild!\n&cHowever, you can still join other peoples' guilds!"
-    Created: "&ayou created the &6%GUILD_NAME% &aguild!"
+    Created: "&aYou created the &6%GUILD_NAME% &aguild!"
   Disband:
     Confirm: "&c================== WARNING ==================\n&eThis will DESTROY THE GUILD and remove all of it's members\n&cAll of the Guild Coins will be DESTROYED. This cannot be undone.\n&cIf you wish to continue, &r&b/guild guild confirm&r&c within 10 seconds.\n&b-----------------------------------------------------"
     Disbanded: "%DISPLAYNAME% &edisbanded the guild."
