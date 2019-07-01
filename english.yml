@@ -12,7 +12,7 @@ Commands:
     NoPermission: "&cYou must be %RANK% &cto create a guild!\n&cHowever, you can still join other peoples' guilds!"
     Created: "&aYou created the &6%GUILD_NAME% &aguild!"
   Disband:
-    Confirm: "&c================== WARNING ==================\n&eThis will DESTROY THE GUILD and remove all of it's members\n&cAll of the Guild Coins will be DESTROYED. This cannot be undone.\n&cIf you wish to continue, &r&b/guild guild confirm&r&c within 10 seconds.\n&b-----------------------------------------------------"
+    Confirm: "&c================== WARNING ==================\n&eThis will DESTROY THE GUILD and remove all of it's members\n&cAll of the Guild Coins will be DESTROYED. This cannot be undone.\n&cIf you wish to continue, &b/guild guild confirm&c within 10 seconds.\n&b-----------------------------------------------------"
     Disbanded: "%DISPLAYNAME% &edisbanded the guild."
   Join:
     Usage: "&cInvalid usage! '/guild join <guildName>'"
