@@ -11,7 +11,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.simplyrin.bungeeguilds.Main;
 import net.simplyrin.bungeeguilds.tools.Config;
-import net.simplyrin.threadpool.ThreadPool;
+import net.simplyrin.bungeeguilds.tools.ThreadPool;
 
 /**
  * Created by SimplyRin on 2019/06/20.
